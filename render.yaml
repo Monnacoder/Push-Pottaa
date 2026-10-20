@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: commit-crimes
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: GITHUB_WEBHOOK_SECRET
+        sync: false
+      - key: SLACK_WEBHOOK_URL
+        sync: false
+      - key: APP_NAME
+        value: Commit Crimes
