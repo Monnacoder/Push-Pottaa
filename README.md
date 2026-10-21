@@ -1,4 +1,4 @@
-# Commit Crimes ☠
+# Push Pottaa ☠
 
 **കോഡ് പുഷ് ചെയ്തോ? ഇനി കരഞ്ഞോ.** A Malayalam-first developer roast bot prototype. It can serve a landing page, generate demo roasts, verify GitHub webhook signatures, and forward supported GitHub events to a Slack Incoming Webhook.
 
