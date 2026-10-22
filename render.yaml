@@ -1,10 +1,9 @@
 services:
   - type: web
     name: push-pottaa
-    runtime: node
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     plan: free
-    buildCommand: npm install
-    startCommand: npm start
     healthCheckPath: /health
     envVars:
       - key: GITHUB_WEBHOOK_SECRET
