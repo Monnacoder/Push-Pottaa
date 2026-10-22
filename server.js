@@ -1,7 +1,7 @@
 import http from 'node:http';
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { extname, join, normalize } from 'node:path';
+import { extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { classifyEvent, pickRoast } from './roasts.js';
 
@@ -37,18 +37,29 @@ async function readBody(req) {
 
 async function postToSlack(message) {
   if (!SLACK_WEBHOOK_URL) throw new Error('SLACK_WEBHOOK_URL is not configured');
-  if (!SLACK_WEBHOOK_URL.startsWith('https://hooks.slack.com/')) throw new Error('Slack webhook URL must use https://hooks.slack.com/');
-  const response = await fetch(SLACK_WEBHOOK_URL, {
+  let webhookUrl;
+  try { webhookUrl = new URL(SLACK_WEBHOOK_URL); }
+  catch { throw new Error('Invalid Slack webhook URL'); }
+  if (webhookUrl.protocol !== 'https:' || webhookUrl.hostname !== 'hooks.slack.com' || webhookUrl.username || webhookUrl.password) {
+    throw new Error('Slack webhook URL must use the official https://hooks.slack.com host');
+  }
+  const response = await fetch(webhookUrl, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ text: message, unfurl_links: false, unfurl_media: false }),
     signal: AbortSignal.timeout(8000)
   });
-  if (!response.ok) throw new Error(`Slack returned HTTP ${response.status}`);
+  if (!response.ok) throw new Error('Slack returned HTTP ' + response.status);
 }
 
 function safeText(value, max = 180) {
-  return String(value ?? '').replace(/[\r\n\t]+/g, ' ').slice(0, max);
+  return String(value ?? '')
+    .replace(/[\r\n\t]+/g, ' ')
+    .slice(0, max)
+    .replace(/([\\*_~\x60])/g, '\\$1')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 function formatSlackMessage(kind, payload) {
@@ -58,9 +69,20 @@ function formatSlackMessage(kind, payload) {
   const url = payload.compare || payload.pull_request?.html_url || payload.workflow_run?.html_url || payload.repository?.html_url;
   const title = safeText(payload.head_commit?.message || payload.pull_request?.title || payload.workflow_run?.name || '', 160);
   const label = kind === 'failure' ? 'BUILD FAILED' : kind === 'success' ? 'BUILD PASSED' : kind === 'merged' ? 'PR MERGED' : kind === 'pull_request' ? 'PULL REQUEST' : kind === 'deploy' ? 'DEPLOYMENT' : 'PUSH DETECTED';
-  const lines = [`*${APP_NAME} 💀 · ${label}*`, `*${pickRoast(kind)}*`, `👤 ${sender}  ·  📦 ${repo}${branch ? `  ·  🌿 ${branch}` : ''}`];
-  if (title) lines.push(`> ${title.replace(/[<>]/g, '')}`);
-  if (url && /^https:\/\//.test(url)) lines.push(`<${url}|എന്ത് തേങ്ങയാണാവോ ഇനി?>`);
+  const lines = [
+    '*' + safeText(APP_NAME, 80) + ' 💀 · ' + label + '*',
+    '*' + safeText(pickRoast(kind), 180) + '*',
+    '👤 ' + sender + '  ·  📦 ' + repo + (branch ? '  ·  🌿 ' + branch : '')
+  ];
+  if (title) lines.push('> ' + title);
+  if (url) {
+    try {
+      const parsedUrl = new URL(url);
+      if (parsedUrl.protocol === 'https:' && parsedUrl.hostname === 'github.com' && !parsedUrl.username && !parsedUrl.password) {
+        lines.push('<' + parsedUrl.toString() + '|എന്ത് തേങ്ങയാണാവോ ഇനി?>');
+      }
+    } catch { /* Ignore malformed event URLs. */ }
+  }
   return lines.join('\n');
 }
 
@@ -124,7 +146,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`${APP_NAME} listening on port ${PORT}`);
+  console.log(APP_NAME + ' listening on port ' + PORT);
   if (!GITHUB_SECRET) console.warn('GITHUB_WEBHOOK_SECRET is not configured; GitHub webhooks will be rejected until configured.');
   if (!SLACK_WEBHOOK_URL) console.warn('SLACK_WEBHOOK_URL is not configured; webhook events cannot be delivered to Slack yet.');
 });
