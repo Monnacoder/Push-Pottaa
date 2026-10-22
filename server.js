@@ -7,7 +7,7 @@ import { classifyEvent, pickRoast } from './roasts.js';
 
 const ROOT = fileURLToPath(new URL('.', import.meta.url));
 const PORT = Number(process.env.PORT || 3000);
-const APP_NAME = process.env.APP_NAME || 'Commit Crimes';
+const APP_NAME = process.env.APP_NAME || 'Push Pottaa';
 const GITHUB_SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
 const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL || '';
 const MAX_BODY_BYTES = 1_000_000;
