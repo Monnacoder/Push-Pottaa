@@ -37,14 +37,14 @@ All connected repositories use the same deployment secret and send messages to t
 
 ## 5. Verify the connection
 
-Make a small test commit and push it to the connected repository, or open a pull request. In GitHub, return to **Settings** → **Webhooks** → your hook → **Recent Deliveries**. The event should receive HTTP **200**, and a Push Pottaa message should appear in the selected Slack channel. Bot-generated events are ignored.
+If your free Render service may have been idle, first open its /health URL and wait for the health response; this wakes the service before GitHub sends an event. Then make a small test commit and push it to the connected repository, or open a pull request. In GitHub, return to **Settings** → **Webhooks** → your hook → **Recent Deliveries**. The push or pull-request event should receive HTTP **200**, and a Push Pottaa message should appear in the selected Slack channel. Bot-generated events are ignored.
 
 ## Troubleshooting
 
 - **HTTP 401:** The GitHub secret and Render's GITHUB_WEBHOOK_SECRET do not match. Enter the same value in both places and save.
 - **HTTP 502:** Check that SLACK_WEBHOOK_URL is the complete, current Slack Incoming Webhook URL and that the app is still allowed in the channel.
-- **HTTP 202 / ignored:** Confirm that Pushes or Pull requests are selected and that the event is one of the supported types.
-- **No message right away:** A free Render service may be waking from sleep. Wait for the request to finish, then check the delivery response in GitHub.
+- **HTTP 202 / ignored:** GitHub sends an automatic ping when a hook is created; Push Pottaa intentionally ignores it, so a 202 for that ping is expected. For a real test, send a Push or Pull request event.
+- **No message right away:** A free Render service may be waking from sleep. Open /health first and wait for it to respond before creating the test push or pull request.
 - **Redelivery:** GitHub lets you redeliver a failed event from its delivery details after correcting the problem.
 
 Never paste secrets into chat or commit them to Git. If a webhook URL is exposed, regenerate it in Slack; if a GitHub secret is exposed, replace it in both Render and GitHub.
