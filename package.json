@@ -1,8 +1,8 @@
 {
-  "name": "commit-crimes",
+  "name": "push-pottaa",
   "version": "0.1.0",
   "private": true,
-  "description": "A Malayalam-first developer roast bot for GitHub events and Slack.",
+  "description": "Push Pottaa sends Therivili messages for GitHub events to Slack.",
   "type": "module",
   "scripts": {
     "start": "node server.js",
