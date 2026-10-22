@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { classifyEvent, pickRoast, roasts } from '../roasts.js';
+import { classifyEvent, pickRoast, roasts } from './roasts.js';
 
 test('every roast category has at least one line', () => {
   for (const [kind, lines] of Object.entries(roasts)) {
