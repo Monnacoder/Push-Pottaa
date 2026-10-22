@@ -1,26 +1,26 @@
-# Push Pottaa ☠
+# Therivili ☠
 
-**കോഡ് പുഷ് ചെയ്തോ? ഇനി കരഞ്ഞോ.** Commit Crimes is a Malayalam-first GitHub roast bot. It accepts signed GitHub webhooks, creates a roast from event metadata, and posts it to Slack.
+Therivili is a developer-facing GitHub integration that posts sharp Malayalam tech humor to a team’s Slack channel when code is pushed, a pull request opens, or a pull request is merged. It runs as a small webhook service that each team deploys under its own accounts.
 
-## Live MVP
+## Install it for your team
 
-- App: https://push-pottaa.onrender.com
-- Health: https://push-pottaa.onrender.com/health
-- GitHub: Monnacoder/Push-Pottaa
-- Slack delivery: MonnaCoder workspace, `#new-channel`
-- Connected events: `push` and `pull_request`
-- Verified: GitHub push delivery returned HTTP 200 and a Malayalam roast appeared in Slack. The temporary test branch was removed afterward.
+Each team needs access to this source repository, its own Render service, a Slack Incoming Webhook for its channel, and a GitHub webhook secret. The hosted demo at https://push-pottaa.onrender.com is the project owner’s installation; it is not a shared public bot for other teams.
 
-The health endpoint reports whether the GitHub signing secret and Slack webhook are configured; it never returns their values. GitHub signatures are verified. The service uses event metadata and does not clone repositories or read source files.
+1. Fork this repository into your GitHub account.
+2. In Render, create a Blueprint from your fork and apply the included render.yaml.
+3. In the new service’s private environment settings, set GITHUB_WEBHOOK_SECRET to a long random value and SLACK_WEBHOOK_URL to your team’s Slack Incoming Webhook URL. Set APP_NAME to Therivili. Never put these values in Git, chat, or screenshots.
+4. Wait for deployment, then open your service’s /health URL. It should report ok: true, githubSecretConfigured: true, and slackConfigured: true.
+5. In each GitHub repository you want to connect, open Settings → Webhooks → Add webhook. Set the payload URL to https://YOUR-SERVICE.onrender.com/webhooks/github, content type to application/json, and enter the same secret from step 3. Select Pushes and Pull requests.
+6. Push a commit or open a pull request. Check GitHub’s webhook delivery for HTTP 200 and look for the Therivili message in the configured Slack channel.
 
-The landing-page demo is sample data and does not contact GitHub.
+One team deployment can receive events from multiple repositories by adding the same webhook URL and secret in each repository. All messages go to the one Slack channel configured for that deployment. Use a separate deployment and secret for each team.
 
-## Run locally
+## Local development
 
-Requires Node.js 20 or newer. Copy `.env.example` to `.env`, set `GITHUB_WEBHOOK_SECRET` and `SLACK_WEBHOOK_URL`, then run `npm start`. `npm test` runs the automated unit tests. Keep secrets out of Git, screenshots, public docs, and chat.
+Requires Node.js 20 or newer. Copy .env.example to .env, set GITHUB_WEBHOOK_SECRET and SLACK_WEBHOOK_URL, then run npm start. Run npm test for the automated unit tests. The /health endpoint reveals only whether the secrets are set, never their values.
 
-## Deployment notes
+The service verifies GitHub’s signature and uses event metadata only; it does not clone repositories or read source files. The landing-page demo uses sample data and does not post to Slack.
 
-The service is running on Render’s free tier. It may spin down while inactive, so its first request after a quiet period can take 50 seconds or more. The Slack integration uses Incoming Webhooks, a legacy Slack feature that may be deprecated. No paid plan or upgrade was enabled.
+## Limits
 
-The privacy and terms pages are launch drafts. Discord, billing, multi-repository settings, opt-out controls, and general self-serve installation are future work; the current MVP serves one connected repository and one Slack channel.
+The included Render Blueprint uses the free tier, which can sleep during inactivity. The Slack integration uses Incoming Webhooks, a legacy feature that Slack may deprecate. The privacy and terms pages are drafts. There is no shared sign-up, one-click installation, billing, per-user settings, or opt-out control yet. No paid upgrade is required for the self-hosted setup.
