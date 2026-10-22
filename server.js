@@ -60,7 +60,7 @@ function formatSlackMessage(kind, payload) {
   const label = kind === 'failure' ? 'BUILD FAILED' : kind === 'success' ? 'BUILD PASSED' : kind === 'merged' ? 'PR MERGED' : kind === 'pull_request' ? 'PULL REQUEST' : kind === 'deploy' ? 'DEPLOYMENT' : 'PUSH DETECTED';
   const lines = [`*${APP_NAME} 💀 · ${label}*`, `*${pickRoast(kind)}*`, `👤 ${sender}  ·  📦 ${repo}${branch ? `  ·  🌿 ${branch}` : ''}`];
   if (title) lines.push(`> ${title.replace(/[<>]/g, '')}`);
-  if (url && /^https:\/\//.test(url)) lines.push(`<${url}|കുറ്റകൃത്യം പരിശോധിക്കൂ →>`);
+  if (url && /^https:\/\//.test(url)) lines.push(`<${url}|എന്ത് തേങ്ങയാണാവോ ഇനി?>`);
   return lines.join('\n');
 }
 
@@ -96,7 +96,7 @@ const server = http.createServer(async (req, res) => {
     catch { return json(res, 400, { error: 'Invalid request body' }); }
     const allowed = ['push', 'failure', 'pull_request', 'merged', 'deploy', 'success'];
     const kind = allowed.includes(body.kind) ? body.kind : 'push';
-    return json(res, 200, { kind, roast: pickRoast(kind) });
+    return json(res, 200, { kind, therivili: pickRoast(kind) });
   }
 
   if (req.method === 'POST' && url.pathname === '/webhooks/github') {
