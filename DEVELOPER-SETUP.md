@@ -54,12 +54,30 @@ Never paste secrets into chat or commit them to Git. If a webhook URL is exposed
 Requires Node.js 20 or newer.
 
 1. Clone your fork and open its folder in a terminal.
-2. Copy the sample environment file to .env (on macOS/Linux, run: cp .env.example .env), then edit .env to set GITHUB_WEBHOOK_SECRET and SLACK_WEBHOOK_URL. Do not commit .env.
-3. Run:
+2. Install dependencies and run the automated tests. These tests do not need Slack or GitHub secrets:
 
 ~~~sh
 npm install
 npm test
+~~~
+
+3. To run the server locally, set GITHUB_WEBHOOK_SECRET and SLACK_WEBHOOK_URL in your terminal session before running npm start. The .env.example file lists the variable names, but the app does not load a .env file automatically.
+
+On macOS/Linux (Bash), these prompts keep the values out of your command history:
+
+~~~sh
+read -rsp "GitHub webhook secret: " GITHUB_WEBHOOK_SECRET; echo
+export GITHUB_WEBHOOK_SECRET
+read -rp "Slack webhook URL: " SLACK_WEBHOOK_URL; echo
+export SLACK_WEBHOOK_URL
+npm start
+~~~
+
+On Windows PowerShell:
+
+~~~powershell
+$env:GITHUB_WEBHOOK_SECRET = Read-Host "GitHub webhook secret"
+$env:SLACK_WEBHOOK_URL = Read-Host "Slack webhook URL"
 npm start
 ~~~
 
