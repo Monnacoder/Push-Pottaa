@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: commit-crimes
+    name: therivili
     runtime: node
     plan: free
     buildCommand: npm install
@@ -12,4 +12,4 @@ services:
       - key: SLACK_WEBHOOK_URL
         sync: false
       - key: APP_NAME
-        value: Commit Crimes
+        value: Therivili
