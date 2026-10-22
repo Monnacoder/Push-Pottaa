@@ -68,8 +68,8 @@ async function serveStatic(req, res, pathname) {
   const routes = {
     '/': 'public/index.html',
     '/privacy': 'public/privacy.html',
-    '/terms': 'public/terms.html',
-    '/prototype': 'public/prototype.html'
+    '/terms': 'terms.html',
+    '/prototype': 'prototype.html'
   };
   const relative = routes[pathname];
   if (!relative) return false;
@@ -109,14 +109,14 @@ const server = http.createServer(async (req, res) => {
     catch { return json(res, 400, { error: 'Invalid JSON payload' }); }
     const event = String(req.headers['x-github-event'] || '');
     const kind = classifyEvent(event, payload);
-    if (!kind) return json(res, 202, { ok: true, ignored: true, reason: 'Event is not configured for roasting' });
+    if (!kind) return json(res, 202, { ok: true, ignored: true, reason: 'Event is not configured for Therivili messages' });
     if (payload.sender?.type === 'Bot') return json(res, 202, { ok: true, ignored: true, reason: 'Bot events are ignored' });
     try {
       await postToSlack(formatSlackMessage(kind, payload));
       return json(res, 200, { ok: true, event, kind, delivered: true });
     } catch (error) {
       console.error('Slack delivery failed:', error.message);
-      return json(res, 502, { error: 'Could not deliver roast to Slack. Check SLACK_WEBHOOK_URL and Slack connectivity.' });
+      return json(res, 502, { error: 'Could not deliver Therivili to Slack. Check SLACK_WEBHOOK_URL and Slack connectivity.' });
     }
   }
 
