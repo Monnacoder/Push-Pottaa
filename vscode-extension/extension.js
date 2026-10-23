@@ -6,6 +6,8 @@ const { spawn } = require('node:child_process');
 let lastNotification = { kind: '', at: 0 };
 let gitApiPromise;
 
+const SOUND_CHOICES = ['pop', 'glass', 'hero', 'ping', 'tink', 'message'];
+
 function speak(text) {
   if (process.platform === 'darwin') {
     const child = spawn('say', [text], { detached: true, stdio: 'ignore' });
@@ -26,19 +28,32 @@ function speak(text) {
   }
 }
 
-function playNotificationSound() {
+function playNotificationSound(choice = 'pop') {
+  const sound = SOUND_CHOICES.includes(choice) ? choice : 'pop';
   let command;
   let args;
 
   if (process.platform === 'darwin') {
+    const files = {
+      pop: 'Pop.aiff', glass: 'Glass.aiff', hero: 'Hero.aiff',
+      ping: 'Ping.aiff', tink: 'Tink.aiff', message: 'Ping.aiff'
+    };
     command = 'afplay';
-    args = ['/System/Library/Sounds/Pop.aiff'];
+    args = ['/System/Library/Sounds/' + files[sound]];
   } else if (process.platform === 'win32') {
+    const tones = {
+      pop: 'Asterisk', glass: 'Beep', hero: 'Exclamation',
+      ping: 'Question', tink: 'Hand', message: 'Asterisk'
+    };
     command = 'powershell.exe';
-    args = ['-NoProfile', '-NonInteractive', '-Command', '[System.Media.SystemSounds]::Asterisk.Play()'];
+    args = ['-NoProfile', '-NonInteractive', '-Command', '[System.Media.SystemSounds]::' + tones[sound] + '.Play()'];
   } else if (process.platform === 'linux') {
+    const tones = {
+      pop: 'message-new-instant', glass: 'complete-download', hero: 'dialog-warning',
+      ping: 'dialog-information', tink: 'bell', message: 'message-new-instant'
+    };
     command = 'canberra-gtk-play';
-    args = ['--id=message-new-instant'];
+    args = ['--id=' + tones[sound]];
   } else {
     return;
   }
@@ -63,7 +78,7 @@ function activate(context) {
     const title = 'Push Pottaa · ' + kind.replace('_', ' ').toUpperCase();
     output.appendLine(title + ': notification shown.');
     void vscode.window.showInformationMessage(title + ': ' + message);
-    if (settings.get('sound', true)) playNotificationSound();
+    if (settings.get('sound', true)) playNotificationSound(settings.get('soundStyle', 'pop'));
     if (settings.get('voice', false)) speak(message);
   };
 
