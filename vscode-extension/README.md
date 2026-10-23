@@ -14,6 +14,7 @@ Open the Command Palette and run **Push Pottaa: Test notification**. A Push Pott
 
 - pushPottaa.enabled: show or hide notifications (default true).
 - pushPottaa.sound: play a brief alert sound with each notification (default true).
+- pushPottaa.soundStyle: choose Pop, Glass, Hero, Ping, Tink, or Message. Open VS Code Settings, search for “Push Pottaa: Sound Style,” choose a sound, then run **Push Pottaa: Test notification** to hear it. Each choice uses an alert built into the user's operating system; the exact Apple iPhone text tone is not bundled.
 - pushPottaa.voice: read messages aloud with the operating system voice (default false).
 - pushPottaa.successEvents: show messages after successful actions (default true).
 - pushPottaa.deployCommands: add the deploy commands used by your team.
