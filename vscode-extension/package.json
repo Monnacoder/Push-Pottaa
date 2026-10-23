@@ -2,7 +2,7 @@
   "name": "push-pottaa",
   "displayName": "Push Pottaa",
   "description": "Quiet, optional Malayalam Therivili notifications for developer actions in VS Code.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "monnacoder",
   "engines": { "vscode": "^1.93.0" },
   "repository": { "type": "git", "url": "https://github.com/Monnacoder/Push-Pottaa.git", "directory": "vscode-extension" },
@@ -26,6 +26,7 @@
       "title": "Push Pottaa",
       "properties": {
         "pushPottaa.enabled": { "type": "boolean", "default": true, "description": "Show a small VS Code notification after supported developer actions." },
+        "pushPottaa.sound": { "type": "boolean", "default": true, "description": "Play a brief system alert sound when a notification appears." },
         "pushPottaa.voice": { "type": "boolean", "default": false, "description": "Read the message aloud using the operating system voice. Off by default." },
         "pushPottaa.deployCommands": { "type": "array", "items": { "type": "string" }, "default": ["deploy", "publish", "vercel --prod", "netlify deploy --prod", "fly deploy", "railway up", "render deploy"], "description": "Command phrases treated as deployments. Match is case-insensitive." },
         "pushPottaa.successEvents": { "type": "boolean", "default": true, "description": "Show a Therivili message after successful Git push, pull, PR, deployment, test, or build commands." }
