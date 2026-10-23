@@ -1,14 +1,14 @@
 # Push Pottaa ☠
 
-Push Pottaa shows short Malayalam Therivili messages where developers work. The VS Code extension detects local Git, pull request, test, build, and deployment commands in the integrated terminal and shows a small editor notification. Optional speech is off by default. No website or Slack setup is needed for those local messages.
+Push Pottaa shows short Malayalam Therivili messages where developers work. The VS Code extension detects supported Git, pull request, test, build, and deployment commands in the integrated terminal. It also adds Push Pottaa Push/Pull actions to the Source Control toolbar. Optional speech is off by default. Local messages need no website or Slack setup.
 
 ## Use it in VS Code
 
 1. Download the push-pottaa-vsix artifact from the latest successful [Build VS Code extension run](https://github.com/Monnacoder/Push-Pottaa/actions/workflows/build-vscode-extension.yml).
 2. Extract the downloaded artifact zip. In VS Code, open Extensions → … → Install from VSIX… and choose the .vsix file.
-3. Reload VS Code if prompted. Push, pull, deploy, PR, and test/build commands entered in the integrated terminal now trigger editor notifications. Turn on pushPottaa.voice in Settings if you want messages read aloud.
+3. Reload VS Code if prompted. Use the Command Palette entry **Push Pottaa: Test notification** to confirm the extension is active. In Source Control, use the Push Pottaa cloud-upload and cloud-download toolbar buttons for notifications after Git push and pull. Commands such as git push and git pull in VS Code's integrated terminal are also detected when terminal shell integration is available. Turn on pushPottaa.voice in Settings to hear messages aloud.
 
-This first version watches VS Code's integrated terminal, plus successful pushes made with VS Code's built-in Source Control view. It does not observe commands run in a separate terminal app or actions clicked on GitHub.com.
+Push Pottaa cannot observe commands run in a separate terminal app, VS Code's built-in Git buttons, or actions clicked on GitHub.com. GitHub Actions results that arrive later remain available through the optional webhook-to-Slack service.
 
 ## Remote GitHub events
 
