@@ -11,6 +11,17 @@
   "main": "./extension.js",
   "activationEvents": ["onStartupFinished"],
   "contributes": {
+    "commands": [
+      { "command": "pushPottaa.testNotification", "title": "Push Pottaa: Test notification" },
+      { "command": "pushPottaa.push", "title": "Push Pottaa: Push", "icon": "$(cloud-upload)" },
+      { "command": "pushPottaa.pull", "title": "Push Pottaa: Pull", "icon": "$(cloud-download)" }
+    ],
+    "menus": {
+      "view/title": [
+        { "command": "pushPottaa.push", "when": "view == scm", "group": "navigation@1" },
+        { "command": "pushPottaa.pull", "when": "view == scm", "group": "navigation@2" }
+      ]
+    },
     "configuration": {
       "title": "Push Pottaa",
       "properties": {
