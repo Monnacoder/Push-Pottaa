@@ -4,14 +4,12 @@ on:
     branches: [main]
     paths:
       - 'roasts.js'
-      - 'package.json'
       - 'scripts/generate-vscode-roasts.js'
       - 'vscode-extension/**'
       - '.github/workflows/build-vscode-extension.yml'
   pull_request:
     paths:
       - 'roasts.js'
-      - 'package.json'
       - 'scripts/generate-vscode-roasts.js'
       - 'vscode-extension/**'
       - '.github/workflows/build-vscode-extension.yml'
@@ -29,10 +27,11 @@ jobs:
         run: node -e "JSON.parse(require('node:fs').readFileSync('vscode-extension/package.json','utf8'))"
       - name: Generate the shared Therivili list
         run: node scripts/generate-vscode-roasts.js
-      - name: Check action detection and message data
+      - name: Check action detection
         run: node --test vscode-extension/*.test.cjs
       - name: Package the installable extension
-        run: npx --yes @vscode/vsce package vscode-extension --out push-pottaa.vsix
+        working-directory: vscode-extension
+        run: npx --yes @vscode/vsce package --out ../push-pottaa.vsix
       - uses: actions/upload-artifact@v4
         with:
           name: push-pottaa-vsix
