@@ -1,0 +1,26 @@
+{
+  "name": "push-pottaa",
+  "displayName": "Push Pottaa",
+  "description": "Quiet, optional Malayalam Therivili notifications for developer actions in VS Code.",
+  "version": "0.1.0",
+  "publisher": "monnacoder",
+  "engines": { "vscode": "^1.93.0" },
+  "repository": { "type": "git", "url": "https://github.com/Monnacoder/Push-Pottaa.git", "directory": "vscode-extension" },
+  "extensionDependencies": ["vscode.git"],
+  "categories": ["Other"],
+  "main": "./extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "configuration": {
+      "title": "Push Pottaa",
+      "properties": {
+        "pushPottaa.enabled": { "type": "boolean", "default": true, "description": "Show a small VS Code notification after supported developer actions." },
+        "pushPottaa.voice": { "type": "boolean", "default": false, "description": "Read the message aloud using the operating system voice. Off by default." },
+        "pushPottaa.deployCommands": { "type": "array", "items": { "type": "string" }, "default": ["deploy", "publish", "vercel --prod", "netlify deploy --prod", "fly deploy", "railway up", "render deploy"], "description": "Command phrases treated as deployments. Match is case-insensitive." },
+        "pushPottaa.successEvents": { "type": "boolean", "default": true, "description": "Show a Therivili message after successful Git push, pull, PR, deployment, test, or build commands." }
+      }
+    }
+  },
+  "files": ["extension.js", "classify.cjs", "roasts.cjs", "README.md"],
+  "license": "UNLICENSED"
+}
