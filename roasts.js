@@ -91,3 +91,18 @@ export function classifyEvent(eventName, payload = {}) {
   if (eventName === 'deployment_status' && payload.deployment_status?.state === 'success') return 'deploy';
   return null;
 }
+
+    
+// Used by the local editor companion for git pull actions.
+roasts.pull = [
+  'Pull ചെയ്തു; തലയിൽ കയറ്റിയത് എന്താ, തായോളി?',
+  'Upstream വന്നു, ബുദ്ധി പോയി, കുണ്ണേ.',
+  'പുതിയ code കിട്ടി; പണി നിനക്കാ, കഴുവേറി.',
+  'Pull കഴിഞ്ഞിട്ട് conflict നോക്കെടാ, പൂറിമോനേ.',
+  'Local branch കണ്ടിട്ട് ചിരിച്ചു, തായോളി.',
+  'ഇതും എടുത്തോ, കുണ്ണേ? ധൈര്യം തന്നെ.',
+  'Merge conflict നിന്റെ കുണ്ണപ്പണി തന്നെ.',
+  'Pull ചെയ്തു; ഇനി കരയണ്ട, നായിന്റെ മോനേ.',
+  'Upstream വൃത്തിയായിരുന്നു; നീയാണ് പ്രശ്നം, കഴുവേറി.',
+  'പുതിയ changes വന്നല്ലോ, തായോളി. പേടിച്ചോ?'
+];
