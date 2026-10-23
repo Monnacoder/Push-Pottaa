@@ -6,6 +6,11 @@ You need a GitHub account, a Slack workspace where you can add an app or webhook
 
 ## 1. Make your own copy
 
+
+For messages in the developer's work window, install the VS Code extension from its latest successful build artifact: https://github.com/Monnacoder/Push-Pottaa/actions/workflows/build-vscode-extension.yml. Extract the downloaded zip, then in VS Code choose Extensions → … → Install from VSIX… and select push-pottaa.vsix. It needs no service, account, Slack, website, or secret. It watches supported actions in VS Code's integrated terminal.
+
+The setup below is optional. It configures remote GitHub events in a team's Slack channel.
+
 1. Open the [Push Pottaa repository](https://github.com/Monnacoder/Push-Pottaa) and choose **Fork**. Create the fork in the account or organization that owns the repositories you want to connect.
 2. Keep the fork private or public according to your team's needs. The app source contains no secrets; never put secret values in Git.
 
