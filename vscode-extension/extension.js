@@ -26,6 +26,28 @@ function speak(text) {
   }
 }
 
+function playNotificationSound() {
+  let command;
+  let args;
+
+  if (process.platform === 'darwin') {
+    command = 'afplay';
+    args = ['/System/Library/Sounds/Pop.aiff'];
+  } else if (process.platform === 'win32') {
+    command = 'powershell.exe';
+    args = ['-NoProfile', '-NonInteractive', '-Command', '[System.Media.SystemSounds]::Asterisk.Play()'];
+  } else if (process.platform === 'linux') {
+    command = 'canberra-gtk-play';
+    args = ['--id=message-new-instant'];
+  } else {
+    return;
+  }
+
+  const child = spawn(command, args, { detached: true, stdio: 'ignore', windowsHide: true });
+  child.on('error', () => {});
+  child.unref();
+}
+
 function activate(context) {
   const config = () => vscode.workspace.getConfiguration('pushPottaa');
   const output = vscode.window.createOutputChannel('Push Pottaa');
@@ -41,6 +63,7 @@ function activate(context) {
     const title = 'Push Pottaa · ' + kind.replace('_', ' ').toUpperCase();
     output.appendLine(title + ': notification shown.');
     void vscode.window.showInformationMessage(title + ': ' + message);
+    if (settings.get('sound', true)) playNotificationSound();
     if (settings.get('voice', false)) speak(message);
   };
 
